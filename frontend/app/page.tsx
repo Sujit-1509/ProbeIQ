@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Candidate } from '@/lib/types'
+import type { Candidate, InterviewSettings } from '@/lib/types'
 import { getCandidates } from '@/lib/candidates'
 import { startInterview } from '@/lib/api'
 
@@ -87,6 +87,7 @@ function CandidatePicker() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [settings, setSettings] = useState<InterviewSettings>({ focus: 'Candidate project work', duration: 'standard', style: 'technical' })
 
   useEffect(() => {
     getCandidates()
@@ -102,10 +103,10 @@ function CandidatePicker() {
     const sessionId = crypto.randomUUID()
 
     try {
-      const data = await startInterview(sessionId, candidate)
+      const data = await startInterview(sessionId, candidate, settings)
       localStorage.setItem(
         'probeiq_session',
-        JSON.stringify({ sessionId, candidate, messages: [{ role: 'interviewer', text: data.reply }] }),
+        JSON.stringify({ sessionId, candidate, settings, messages: [{ role: 'interviewer', text: data.reply }] }),
       )
       router.push('/interview')
     } catch (e) {
@@ -152,6 +153,12 @@ function CandidatePicker() {
             </span>
           </button>
         ))}
+      </div>
+
+      <div className="grid sm:grid-cols-3 gap-3 mb-6">
+        <label className="text-xs font-semibold text-slate-600">Focus<select value={settings.focus} onChange={e => setSettings(s => ({ ...s, focus: e.target.value }))} className="mt-1 w-full rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-sm"><option>Candidate project work</option><option>System design</option><option>Debugging and delivery</option></select></label>
+        <label className="text-xs font-semibold text-slate-600">Length<select value={settings.duration} onChange={e => setSettings(s => ({ ...s, duration: e.target.value as InterviewSettings['duration'] }))} className="mt-1 w-full rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-sm"><option value="short">Short</option><option value="standard">Standard</option><option value="deep">Deep dive</option></select></label>
+        <label className="text-xs font-semibold text-slate-600">Style<select value={settings.style} onChange={e => setSettings(s => ({ ...s, style: e.target.value as InterviewSettings['style'] }))} className="mt-1 w-full rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-sm"><option value="technical">Technical</option><option value="balanced">Balanced</option><option value="supportive">Supportive</option></select></label>
       </div>
 
       {error && (

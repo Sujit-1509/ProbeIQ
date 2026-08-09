@@ -34,3 +34,4 @@ class InterviewState(TypedDict):
     status: Literal["IN_PROGRESS", "DONE"]
     topic_scores: Optional[list[TopicScore]]
     feedback: Optional[dict]
+    settings: dict

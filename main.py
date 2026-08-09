@@ -37,6 +37,12 @@ class InterviewRequest(BaseModel):
     sessionId: str
     candidate: Optional[dict] = None   # required on turn 1 only
     message:   Optional[str]  = None   # required on turn 2+ only
+    settings:  Optional[dict] = None
+    action:    Optional[str]  = None
+
+class ReviewRequest(BaseModel):
+    decision: Optional[str] = None
+    reviewerNote: Optional[str] = None
 
 
 class InterviewResponse(BaseModel):
@@ -63,6 +69,7 @@ def interview(req: InterviewRequest):
             "status":        "IN_PROGRESS",
             "topic_scores":  [],
             "feedback":       None,
+            "settings":       req.settings or {},
         }
         session_store.save(state)
 
@@ -81,6 +88,20 @@ def interview(req: InterviewRequest):
         return InterviewResponse(reply=opening, done=False)
 
     # ── Turn 2+: continue an existing session ────────────────────────────────
+    if req.action == "skip":
+        state = session_store.get(req.sessionId)
+        if state is None:
+            raise HTTPException(status_code=404, detail=f"Session '{req.sessionId}' not found.")
+        active = get_current_plan_entry(state)
+        if active:
+            state["covered_days"].add(active["day"])
+        next_entry = get_current_plan_entry(state)
+        reply = interviewer_agent(state, target_entry=next_entry)
+        state["transcript"].append({"role": "interviewer", "text": reply, "day": next_entry["day"] if next_entry else None})
+        state["question_count"] += 1
+        session_store.save(state)
+        return InterviewResponse(reply=reply, done=False)
+
     if not req.message:
         raise HTTPException(
             status_code=400,
@@ -165,6 +186,20 @@ def health():
 @app.get("/api/interviews")
 def get_interview_history():
     return session_store.history()
+
+@app.get("/api/interviews/{session_id}")
+def get_interview(session_id: str):
+    record = session_store.detail(session_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Interview not found")
+    return record
+
+@app.patch("/api/interviews/{session_id}/review")
+def review_interview(session_id: str, review: ReviewRequest):
+    record = session_store.update_review(session_id, review.decision, review.reviewerNote)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Interview not found")
+    return record
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

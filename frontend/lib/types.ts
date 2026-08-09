@@ -40,6 +40,12 @@ export interface Feedback {
   overall_score?: number
 }
 
+export interface InterviewSettings {
+  focus: string
+  duration: 'short' | 'standard' | 'deep'
+  style: 'technical' | 'balanced' | 'supportive'
+}
+
 export interface TopicScore {
   day: number
   title: string
@@ -56,6 +62,10 @@ export interface InterviewHistory {
   topicScores: TopicScore[]
   feedback?: Feedback | null
   updatedAt: string
+  transcript?: Message[]
+  settings?: InterviewSettings
+  decision?: string | null
+  reviewerNote?: string | null
 }
 
 export interface InterviewResponse {

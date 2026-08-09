@@ -35,10 +35,11 @@ def _get_openrouter_client() -> OpenAI | None:
         api_key = os.environ.get("OPENROUTER_API_KEY")
         if api_key and not api_key.startswith("sk-placeholder"):
             try:
+                import httpx
                 _openrouter_client = OpenAI(
                     base_url="https://openrouter.ai/api/v1",
                     api_key=api_key,
-                    timeout=_TIMEOUT
+                    http_client=httpx.Client(timeout=_TIMEOUT),
                 )
             except Exception as e:
                 log.warning("Failed to initialize OpenRouter client: %s", e)

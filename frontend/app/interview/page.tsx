@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { sendMessage as apiSend } from '@/lib/api'
+import { sendMessage as apiSend, skipQuestion } from '@/lib/api'
 import type { Message } from '@/lib/types'
 
 export default function InterviewPage() {
@@ -14,6 +14,7 @@ export default function InterviewPage() {
   const [typing, setTyping]           = useState(false)
   const [disabled, setDisabled]       = useState(false)
   const [qCount, setQCount]           = useState(0)
+  const [paused, setPaused]           = useState(false)
   const bottomRef                     = useRef<HTMLDivElement>(null)
   const textareaRef                   = useRef<HTMLTextAreaElement>(null)
 
@@ -25,15 +26,21 @@ export default function InterviewPage() {
     setName(candidate.member.name)
     setRole(candidate.member.jobRole)
     setMessages(messages)
+    setQCount(messages.filter((message: Message) => message.role === 'interviewer').length)
   }, [router])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typing])
 
+  useEffect(() => {
+    const raw = localStorage.getItem('probeiq_session')
+    if (raw && messages.length) localStorage.setItem('probeiq_session', JSON.stringify({ ...JSON.parse(raw), messages }))
+  }, [messages])
+
   async function handleSend() {
     const text = input.trim()
-    if (!text || disabled) return
+    if (!text || disabled || paused) return
     setInput('')
     setDisabled(true)
     setTyping(true)
@@ -65,6 +72,22 @@ export default function InterviewPage() {
     }
   }
 
+  async function handleSkip() {
+    if (disabled || paused) return
+    setDisabled(true)
+    setTyping(true)
+    try {
+      const data = await skipQuestion(sessionId)
+      setQCount(q => q + 1)
+      setMessages(m => [...m, { role: 'system', text: 'Topic skipped.' }, { role: 'interviewer', text: data.reply }])
+    } catch (e) {
+      setMessages(m => [...m, { role: 'system', text: 'Could not skip this topic. Please try again.' }])
+    } finally {
+      setTyping(false)
+      setDisabled(false)
+    }
+  }
+
   const initials = candidateName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
   return (
@@ -88,7 +111,7 @@ export default function InterviewPage() {
             </div>
           </div>
         </div>
-        <div className="text-xs text-slate-400 tabular-nums">Q {qCount} / ~8-12</div>
+        <div className="flex items-center gap-3"><span className="text-xs text-slate-400 tabular-nums">Q {qCount} / ~8-12</span><button onClick={() => setPaused(value => !value)} className="text-xs font-semibold text-blue-600">{paused ? 'Resume' : 'Pause'}</button></div>
       </header>
 
       {/* Messages */}
@@ -139,16 +162,17 @@ export default function InterviewPage() {
           onKeyDown={e => {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() }
           }}
-          disabled={disabled}
+          disabled={disabled || paused}
           rows={2}
           placeholder="Type your answer… (Enter to send, Shift+Enter for newline)"
           className="flex-1 resize-none rounded-lg border-2 border-[#E4E7EB] px-3 py-2.5 text-sm
             focus:outline-none focus:border-[#2563EB] transition-colors duration-150
             disabled:opacity-50 max-h-[120px]"
         />
+        <button onClick={handleSkip} disabled={disabled || paused} className="px-3 py-2.5 border border-[#CBD5E1] text-slate-600 font-semibold text-sm rounded-lg disabled:opacity-40">Skip</button>
         <button
           onClick={handleSend}
-          disabled={disabled || !input.trim()}
+          disabled={disabled || paused || !input.trim()}
           className="px-5 py-2.5 bg-[#2563EB] text-white font-semibold text-sm rounded-lg
             cursor-pointer transition-colors duration-150 whitespace-nowrap
             disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-700"
