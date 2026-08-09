@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import time
 import logging
+import re
 from openai import OpenAI, APITimeoutError, APIConnectionError, RateLimitError, APIError
 from dotenv import load_dotenv
 
@@ -70,7 +71,15 @@ def _mock_fallback_response(messages: list[dict]) -> str:
     if "Return a JSON object" in last_user_msg or "exactly these keys" in last_user_msg:
         return '{"summary": "Candidate demonstrated solid foundations across technical topics.", "strengths": ["Clear communication on core tools", "Understands basic workflow patterns"], "gaps": ["Could elaborate more on edge-case trade-offs"], "next": ["Practice deeper system architecture scenarios"]}'
 
-    return "That's a helpful overview. Could you walk me through a specific trade-off or technical decision you faced when implementing this?"
+    candidate = re.search(r"Candidate:\s*([^,\n]+).*?role:\s*([^\n]+)", last_user_msg)
+    name = candidate.group(1).strip() if candidate else "there"
+    topic = re.search(r"(?:First topic|Next topic|Current topic).*?Day\s+(\d+):\s*([^\n]+)", last_user_msg, re.I)
+    topic_name = topic.group(2).strip() if topic else "this topic"
+    if "Follow-up" in last_user_msg or "follow-up" in last_user_msg:
+        return f"Thanks, {name}. Staying with {topic_name}, what was the hardest issue you encountered and how did you validate your solution?"
+    if "previous topic" in last_user_msg and ("move on" in last_user_msg or "indicated" in last_user_msg):
+        return f"No problem, {name}. Let's move on to {topic_name}: what did you build, and what would you improve in a second iteration?"
+    return f"Thanks, {name}. For {topic_name}, can you describe the concrete implementation, one trade-off you made, and how you tested it?"
 
 
 def chat(

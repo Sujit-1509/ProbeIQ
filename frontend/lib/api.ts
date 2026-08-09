@@ -1,6 +1,7 @@
-import type { Candidate, InterviewResponse } from './types'
+import type { Candidate, InterviewResponse, InterviewHistory } from './types'
 
-const API = 'http://localhost:8000/api/interview'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API = `${API_BASE}/api/interview`
 
 export async function startInterview(
   sessionId: string,
@@ -31,5 +32,11 @@ export async function sendMessage(
     const err = await res.json().catch(() => ({}))
     throw new Error(err.detail ?? `HTTP ${res.status}`)
   }
+  return res.json()
+}
+
+export async function getInterviewHistory(): Promise<InterviewHistory[]> {
+  const res = await fetch(`${API_BASE}/api/interviews`, { cache: 'no-store' })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json()
 }

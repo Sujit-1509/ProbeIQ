@@ -178,15 +178,36 @@ def _extract_keywords(entry: PlanEntry) -> set[str]:
     return keywords
 
 
+# Words that indicate a candidate IS engaged despite using an 'unknown' phrase
+_POSITIVE_CONTEXT_WORDS = {
+    "but", "however", "although", "studied", "understand",
+    "know", "learned", "tried", "worked", "built", "used",
+    "implemented", "explored", "covered", "read",
+}
+
+
 def _is_explicit_unknown(text: str) -> bool:
-    """Check if candidate explicitly says they don't know or didn't do it."""
+    """
+    Check if candidate genuinely says they don't know / didn't do a topic.
+
+    Guards against false positives like:
+      'I dont know the exact params but I tuned them carefully'
+    by requiring no positive context words alongside the unknown phrase.
+    """
     lower = text.lower().strip()
+    word_set = set(re.findall(r'[a-z]+', lower))
     unknown_phrases = [
         "i don't know", "i dont know", "not sure", "no idea",
         "didn't do", "didnt do", "haven't done", "havent done",
-        "skipped", "i don't", "i dont", "don't remember", "dont remember"
+        "i don't", "i dont", "don't remember", "dont remember",
     ]
-    return any(phrase in lower for phrase in unknown_phrases) and len(text.split()) < 15
+    has_unknown = any(phrase in lower for phrase in unknown_phrases)
+    if not has_unknown:
+        return False
+    # Long answers with positive context are NOT truly unknown
+    words = text.split()
+    has_positive_context = bool(word_set & _POSITIVE_CONTEXT_WORDS)
+    return len(words) < 12 or not has_positive_context
 
 
 def _is_thin(text: str, entry: PlanEntry) -> bool:
@@ -207,8 +228,13 @@ def _is_thin(text: str, entry: PlanEntry) -> bool:
     if keywords:
         answer_lower = text.lower()
         hits = sum(1 for kw in keywords if kw in answer_lower)
-        if hits >= 1 and word_count >= 15:
+        # Any keyword engagement with >=10 words = substantive, not thin
+        if hits >= 1 and word_count >= 10:
             return False
+        # Strong keyword coverage (3+) even with very short answers = not thin
+        if hits >= 3:
+            return False
+        # No keyword engagement AND under 35 words = thin
         if hits == 0 and word_count < 35:
             return True
 

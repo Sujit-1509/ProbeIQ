@@ -36,6 +36,26 @@ export interface Feedback {
   strengths: string[]
   gaps: string[]
   next: string[]
+  topic_scores?: TopicScore[]
+  overall_score?: number
+}
+
+export interface TopicScore {
+  day: number
+  title: string
+  score: number
+  depth_rating: string
+}
+
+export interface InterviewHistory {
+  sessionId: string
+  candidateName: string
+  candidateRole: string
+  status: string
+  questionCount: number
+  topicScores: TopicScore[]
+  feedback?: Feedback | null
+  updatedAt: string
 }
 
 export interface InterviewResponse {

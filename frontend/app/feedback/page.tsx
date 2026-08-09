@@ -66,6 +66,7 @@ export default function FeedbackPage() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-[#1E3A5F]">Interview Complete</h1>
         <p className="text-slate-500 text-sm mt-1">Feedback for {name}</p>
+        <button onClick={() => window.print()} className="mt-4 px-4 py-2 border border-[#CBD5E1] rounded-lg text-sm font-semibold text-[#1E3A5F] hover:bg-white">Print report</button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl mb-8">
@@ -81,6 +82,8 @@ export default function FeedbackPage() {
           </div>
         ))}
       </div>
+
+      {feedback.overall_score && <div className="w-full max-w-3xl bg-white border border-[#E4E7EB] rounded-xl p-5 mb-8"><div className="flex items-center justify-between mb-4"><h2 className="font-semibold text-[#0F172A]">Technical depth by topic</h2><span className="text-2xl font-bold text-[#1E3A5F]">{feedback.overall_score}/5</span></div><div className="grid sm:grid-cols-2 gap-3">{feedback.topic_scores?.map(score => <div key={`${score.day}-${score.title}`} className="border border-slate-200 rounded-lg p-3"><div className="flex justify-between text-sm"><span className="font-medium text-[#0F172A]">Day {score.day}: {score.title}</span><span className="font-semibold text-blue-600">{score.score}/5</span></div><div className="h-2 bg-slate-100 rounded-full mt-2"><div className="h-2 bg-blue-600 rounded-full" style={{ width: `${score.score * 20}%` }} /></div></div>)}</div></div>}
 
       <button
         onClick={restart}

@@ -23,6 +23,12 @@
 }
 .fade-up { animation: fadeUp 0.2s ease forwards; }
 
+@media print {
+  body { background: white; }
+  button { display: none !important; }
+  main { padding: 0 !important; }
+}
+
 /* ── Reduced motion ───────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

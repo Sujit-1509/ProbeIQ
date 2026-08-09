@@ -136,10 +136,19 @@ Rules:
 
     parsed = _try_parse_json(raw)
     if parsed is not None:
-        return _validate_feedback(parsed)
+        feedback = _validate_feedback(parsed)
+        return _add_scores(feedback, state)
 
     log.error("Failed to parse LLM feedback response — returning safe fallback. Raw: %s", raw[:200])
-    return _SAFE_FALLBACK.copy()
+    return _add_scores(_SAFE_FALLBACK.copy(), state)
+
+
+def _add_scores(feedback: dict, state: InterviewState) -> dict:
+    scores = state.get("topic_scores") or []
+    if scores:
+        feedback["topic_scores"] = scores
+        feedback["overall_score"] = round(sum(item["score"] for item in scores) / len(scores), 1)
+    return feedback
 
 
 def render_feedback_markdown(feedback: dict, state: InterviewState | None = None) -> str:

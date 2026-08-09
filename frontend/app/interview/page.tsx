@@ -43,7 +43,12 @@ export default function InterviewPage() {
     try {
       const data = await apiSend(sessionId, text)
       setTyping(false)
-      setMessages(m => [...m, { role: 'interviewer', text: data.reply }])
+      setMessages(m => {
+        const last = m[m.length - 1]
+        return last?.role === 'interviewer' && last.text === data.reply
+          ? m
+          : [...m, { role: 'interviewer', text: data.reply }]
+      })
 
       if (data.done) {
         localStorage.setItem('probeiq_feedback', JSON.stringify(data.feedback))

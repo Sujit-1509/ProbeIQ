@@ -62,6 +62,7 @@ def interview(req: InterviewRequest):
             "question_count": 0,
             "status":        "IN_PROGRESS",
             "topic_scores":  [],
+            "feedback":       None,
         }
         session_store.save(state)
 
@@ -116,6 +117,7 @@ def interview(req: InterviewRequest):
     if is_done(state):
         state["status"] = "DONE"
         fb = feedback_generator(state)
+        state["feedback"] = fb
         session_store.save(state)
         return InterviewResponse(
             reply="Thank you — that's the end of our interview. I'll put together your feedback now.",
@@ -159,6 +161,10 @@ def get_candidates():
 @app.get("/health")
 def health():
     return {"status": "ok", "sessions": session_store.count()}
+
+@app.get("/api/interviews")
+def get_interview_history():
+    return session_store.history()
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
