@@ -1,127 +1,185 @@
-# ProbeIQ — AI Interview Agent
+<div align="center">
 
-Single-endpoint HTTP service that conducts a realistic multi-turn technical interview, grounded in what the candidate actually did (from `candidates.json`) and what the curriculum covers (`curriculum.json`), ending with structured feedback.
+# ProbeIQ
 
----
+<a href="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1200&color=0891B2&center=true&vCenter=true&width=620&lines=Interview+intelligence+for+hiring+teams;Grounded+questions.+Evidence-backed+reports.;Human+review+where+it+matters.">
+  <img alt="Animated ProbeIQ product summary" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1200&color=0891B2&center=true&vCenter=true&width=620&lines=Interview+intelligence+for+hiring+teams;Grounded+questions.+Evidence-backed+reports.;Human+review+where+it+matters." />
+</a>
 
-## Quickstart
+<br />
+
+[![Python](https://img.shields.io/badge/backend-FastAPI-0891B2?style=flat-square)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/frontend-Next.js-0F172A?style=flat-square)](https://nextjs.org/)
+[![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-059669?style=flat-square)](https://openrouter.ai/)
+[![License](https://img.shields.io/badge/status-active-059669?style=flat-square)](#development)
+
+</div>
+
+ProbeIQ runs adaptive technical interviews using a candidate's actual project and curriculum history. It turns the conversation into a structured assessment, then gives recruiters a durable review workspace for notes and decisions.
+
+## What It Does
+
+| Interview | Assessment | Recruiter workflow |
+| --- | --- | --- |
+| Builds questions from real candidate missions and tools | Scores answer depth by topic in real time | Stores interview history in SQLite |
+| Adapts the interviewer for junior, mid, and senior candidates | Produces strengths, gaps, and concrete next steps | Supports transcript review, notes, and hiring decisions |
+| Lets candidates pause or skip a topic | Includes printable, evidence-oriented feedback | Filters and compares completed sessions |
+
+## Product Flow
+
+```text
+Candidate data + curriculum
+            |
+            v
+  Adaptive interview planner
+            |
+            v
+  Live conversation + topic scoring
+            |
+            v
+ Feedback report + recruiter review
+```
+
+## Stack
+
+- Frontend: Next.js 15, React 18, Tailwind CSS
+- Backend: FastAPI, Pydantic, SQLite
+- LLM: OpenRouter with Ollama and deterministic offline fallbacks
+- Storage: `probeiq.db` for interview history and reviewer decisions
+
+## Quick Start
+
+### 1. Configure the backend
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+```
 
-# 2. Configure environment
-cp .env.example .env
-# Edit .env and add your OPENROUTER_API_KEY
+Create `.env` from `.env.example` and set an OpenRouter key:
 
-# 3. Add your data files
-# Place candidates.json and curriculum.json in the project root
+```env
+OPENROUTER_API_KEY=sk-or-v1-...
+LLM_MODEL=openai/gpt-4o-mini
+```
 
-# 4. Run the server
+Start the API:
+
+```bash
 python main.py
-# or: uvicorn main:app --reload
 ```
 
-Server runs at `http://localhost:8000`.
+The backend is available at `http://localhost:8000`.
 
----
+### 2. Start the frontend
 
-## File Structure
-
-```
-ProbeIQ/
-├── main.py           # FastAPI app + /api/interview route
-├── models.py         # InterviewState TypedDict + related types
-├── session_store.py  # In-memory session dict
-├── planner.py        # InterviewPlanner — pure data logic, no LLM
-├── progress.py       # ProgressTracker + stop condition (code-enforced)
-├── llm_client.py     # LLM wrapper — swap provider here
-├── interviewer.py    # InterviewerAgent — question/follow-up generation
-├── feedback.py       # FeedbackGenerator — end-of-interview feedback
-├── curriculum.json   # (you provide)
-├── candidates.json   # (you provide)
-├── requirements.txt
-└── .env.example
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
----
+On Windows PowerShell, use `npm.cmd run dev` if script execution is restricted.
+
+Open `http://localhost:3000`.
+
+The frontend proxies browser requests through `/backend`, so candidate loading stays same-origin and responsive.
 
 ## API
 
-**Single endpoint:** `POST /api/interview`
+### Start an interview
 
-### Turn 1 — Start
+`POST /api/interview`
+
 ```json
-// Request
-{ "sessionId": "abc-123", "candidate": { /* candidate object from candidates.json */ } }
-
-// Response
-{ "reply": "Hi Alex! Let's start...", "done": false }
-```
-
-### Turn 2..N — Conversation
-```json
-// Request
-{ "sessionId": "abc-123", "message": "I used LangChain to chain prompts together..." }
-
-// Response
-{ "reply": "Interesting — can you walk me through...", "done": false }
-```
-
-### Final Turn
-```json
-// Response
 {
-  "reply": "Thank you — that's the end of our interview.",
-  "done": true,
-  "feedback": {
-    "summary": "...",
-    "strengths": ["..."],
-    "gaps": ["..."],
-    "next": ["..."]
+  "sessionId": "candidate-001",
+  "candidate": { "member": { "name": "Alex" } },
+  "settings": {
+    "focus": "System design",
+    "duration": "standard",
+    "style": "balanced"
   }
 }
 ```
 
----
+### Continue an interview
 
-## Quick curl test
+`POST /api/interview`
+
+```json
+{
+  "sessionId": "candidate-001",
+  "message": "I chose pgvector because it kept our first release simple."
+}
+```
+
+### Skip the current topic
+
+`POST /api/interview`
+
+```json
+{ "sessionId": "candidate-001", "action": "skip" }
+```
+
+### Review interviews
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/candidates` | Candidate picker data |
+| `GET` | `/api/interviews` | Recruiter history |
+| `GET` | `/api/interviews/{sessionId}` | Full report and transcript |
+| `PATCH` | `/api/interviews/{sessionId}/review` | Save decision and reviewer note |
+| `GET` | `/health` | Service health |
+
+Example review request:
+
+```json
+{
+  "decision": "Hire",
+  "reviewerNote": "Strong retrieval trade-off reasoning. Validate production observability in the next round."
+}
+```
+
+## LLM Fallbacks
+
+ProbeIQ stays usable even when a provider is unavailable:
+
+```text
+OpenRouter -> Local Ollama -> Context-aware offline fallback
+```
+
+The fallback still references the current candidate and topic, so a failed provider does not devolve into repeated generic questions.
+
+## Development
 
 ```bash
-# Turn 1
-curl -s -X POST http://localhost:8000/api/interview \
-  -H "Content-Type: application/json" \
-  -d '{"sessionId":"test-1","candidate":{...}}' | jq .
+# Backend syntax check
+python -m py_compile main.py session_store.py interviewer.py feedback.py
 
-# Turn 2
-curl -s -X POST http://localhost:8000/api/interview \
-  -H "Content-Type: application/json" \
-  -d '{"sessionId":"test-1","message":"I worked on prompt chaining using LangChain"}' | jq .
-
-# Health check
-curl http://localhost:8000/health
+# Frontend production build
+cd frontend
+npm run build
 ```
+
+## Project Map
+
+```text
+ProbeIQ/
+  main.py                 FastAPI routes and interview lifecycle
+  planner.py              Candidate mission and curriculum planning
+  interviewer.py          Adaptive question generation and scoring
+  feedback.py             Structured final assessment
+  llm_client.py           OpenRouter, Ollama, and offline fallback client
+  session_store.py        SQLite-backed interview history and review metadata
+  frontend/app/           Landing, interview, feedback, and dashboard screens
+```
+
+## Data and Privacy
+
+Candidate data comes from the local `candidates.json` file. Interviews and reviewer notes are stored locally in `probeiq.db`. Do not commit `.env` or `probeiq.db`.
 
 ---
 
-## Stop condition
-
-Enforced in `progress.py`, not by the LLM:
-```
-done = (question_count >= 8) AND (covered_days >= 4) AND (plan exhausted OR question_count >= 14)
-```
-
----
-
-## Restart safety
-
-Sessions are stored in-memory. If the server process restarts mid-interview, active sessions are lost and clients will receive a 404 on the next turn. This is an acceptable hackathon tradeoff — the spec does not require durability across restarts. To add persistence later, swap `session_store.py`'s dict for Redis or SQLite; no other file needs to change.
-
----
-
-## Swapping the LLM provider
-
-Edit `llm_client.py` only. Everything else is provider-agnostic.
-Set `LLM_MODEL` in `.env` to change the model (default: `openai/gpt-4o-mini`).
-
-Currently configured for OpenRouter with fallback to local Ollama then offline mock.
+<div align="center">
+  Built for teams that want hiring evidence, not just interview transcripts.
+</div>
