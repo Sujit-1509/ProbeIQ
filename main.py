@@ -96,6 +96,13 @@ def interview(req: InterviewRequest):
         active = get_current_plan_entry(state)
         if active:
             state["covered_days"].add(active["day"])
+        # Record skip as a candidate turn so prompt builders have an answer
+        # to acknowledge instead of two consecutive interviewer messages.
+        state["transcript"].append({
+            "role": "candidate",
+            "text": "Let's skip this topic and move on to the next one.",
+            "day": None,
+        })
         next_entry = get_current_plan_entry(state)
         reply = interviewer_agent(state, target_entry=next_entry)
         state["transcript"].append({"role": "interviewer", "text": reply, "day": next_entry["day"] if next_entry else None})
