@@ -27,6 +27,10 @@ ProbeIQ runs adaptive technical interviews using a candidate's actual project an
 
 ## Product Flow
 
+<p align="center">
+  <img src="docs/probeiq-flow.svg" alt="Animated ProbeIQ product workflow" width="900" />
+</p>
+
 ```text
 Candidate data + curriculum
             |
