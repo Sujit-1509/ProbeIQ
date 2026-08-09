@@ -6,14 +6,13 @@
   <img alt="Animated ProbeIQ product summary" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1200&color=0891B2&center=true&vCenter=true&width=620&lines=Interview+intelligence+for+hiring+teams;Grounded+questions.+Evidence-backed+reports.;Human+review+where+it+matters.;Live+at+frontend-swart-nu-76.vercel.app" />
 </a>
 
-<br />
-
-</div>
 [![Python](https://img.shields.io/badge/backend-FastAPI-0891B2?style=flat-square)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/frontend-Next.js-0F172A?style=flat-square)](https://nextjs.org/)
 [![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-059669?style=flat-square)](https://openrouter.ai/)
 [![Deployed](https://img.shields.io/badge/deployed-Vercel+Render-0F172A?style=flat-square)](https://frontend-swart-nu-76.vercel.app)
 [![License](https://img.shields.io/badge/status-active-059669?style=flat-square)](#development)
+
+</div>
 
 ProbeIQ runs adaptive technical interviews using a candidate's actual project and curriculum history. It turns the conversation into a structured assessment, then gives recruiters a durable review workspace for notes and decisions.
 
