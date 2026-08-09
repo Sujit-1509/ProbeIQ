@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="26" role="img" aria-label="Live">
+  <rect width="96" height="26" rx="13" fill="#059669" />
+  <circle cx="20" cy="13" r="4.5" fill="#fff">
+    <animate attributeName="opacity" values="1;0.15;1" dur="1.2s" repeatCount="indefinite" />
+  </circle>
+  <text x="34" y="17.5" font-family="Verdana, sans-serif" font-size="12" font-weight="700" fill="#fff">LIVE</text>
+</svg>

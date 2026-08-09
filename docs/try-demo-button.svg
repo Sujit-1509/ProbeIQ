@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="48" role="img" aria-label="Try the live demo">
+  <defs>
+    <linearGradient id="btnGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0891B2" />
+      <stop offset="0.5" stop-color="#0D9488" />
+      <stop offset="1" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="48" rx="24" fill="url(#btnGrad)" />
+  <rect width="300" height="48" rx="24" fill="#fff" opacity="0">
+    <animate attributeName="opacity" values="0;0.45;0" dur="2.8s" repeatCount="indefinite" />
+    <animateTransform attributeName="transform" type="translate" values="-300 0;300 0" dur="2.8s" repeatCount="indefinite" />
+  </rect>
+  <text x="150" y="29" text-anchor="middle" font-family="Verdana, sans-serif" font-size="15" font-weight="700" fill="#fff">Try the live demo</text>
+</svg>
