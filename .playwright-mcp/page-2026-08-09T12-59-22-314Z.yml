@@ -1,0 +1,151 @@
+- main [ref=e2]:
+  - navigation [ref=e4]:
+    - link "PI ProbeIQ" [ref=e5] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e6]: PI
+      - generic [ref=e7]: ProbeIQ
+    - generic [ref=e8]:
+      - link "How it works" [ref=e9] [cursor=pointer]:
+        - /url: "#how"
+      - link "Features" [ref=e10] [cursor=pointer]:
+        - /url: "#features"
+      - link "Feedback" [ref=e11] [cursor=pointer]:
+        - /url: "#feedback"
+      - link "Recruiter review" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+    - link "Start interview" [ref=e13] [cursor=pointer]:
+      - /url: "#start"
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]: Interview intelligence for hiring teams
+      - heading "ProbeIQ" [level=1] [ref=e17]
+      - paragraph [ref=e18]: ProbeIQ conducts realistic multi-turn technical interviews, grounded in what a candidate actually built — then delivers structured, honest feedback your team can act on.
+      - generic [ref=e19]:
+        - link "Start an interview" [ref=e20] [cursor=pointer]:
+          - /url: "#start"
+        - link "See how it works" [ref=e23] [cursor=pointer]:
+          - /url: "#how"
+      - generic [ref=e24]:
+        - generic [ref=e25]: ~8-12 questions
+        - generic [ref=e26]: 3× persona depth
+        - generic [ref=e27]: 0 demo crashes
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: AI
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: Alex
+              - generic [ref=e36]: Technical Interviewer
+            - generic [ref=e37]: Conducting · Q 4 of ~10
+        - generic [ref=e39]:
+          - generic [ref=e40]: Nice — embedding the intent classifier is a solid move. Building on that, how did you tune the retrieval threshold so recall didn't collapse on your Day 7 project? Walk me through your actual approach.
+          - generic [ref=e42]: I iterated on eval sets per category — started strict for finance terms, then relaxed the top-k so the LLM could rerank ambiguous queries.
+          - generic [ref=e44]: Alex is typing
+      - generic [ref=e50]:
+        - generic [ref=e51]: Answer depth
+        - generic [ref=e52]: Guided → Mastered
+      - generic [ref=e53]: Grounded in real missions
+  - generic [ref=e58]:
+    - generic [ref=e59]:
+      - heading "How it works" [level=2] [ref=e60]
+      - paragraph [ref=e61]: Three steps from data to a hiring decision.
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]: "01"
+        - heading "Pick a candidate" [level=3] [ref=e65]
+        - paragraph [ref=e66]: ProbeIQ reads live candidate & mission data from your backend — no manual setup.
+      - generic [ref=e67]:
+        - generic [ref=e68]: "02"
+        - heading "Interview with Alex" [level=3] [ref=e69]
+        - paragraph [ref=e70]: A multi-turn, conversational technical interview that adapts to every answer.
+      - generic [ref=e71]:
+        - generic [ref=e72]: "03"
+        - heading "Get structured feedback" [level=3] [ref=e73]
+        - paragraph [ref=e74]: Summary, strengths, gaps, and next steps — ready to share with your team.
+  - generic [ref=e75]:
+    - generic [ref=e76]:
+      - text: Features
+      - heading "Built to be scrupulously fair" [level=2] [ref=e77]
+      - paragraph [ref=e78]: Every interview is grounded in real work — no skin-the-cat quizzes.
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - heading "Conducts real conversations" [level=3] [ref=e84]
+        - paragraph [ref=e85]: Follow-ups reference what the candidate just said — calling back earlier answers instead of re-running a static checklist.
+      - generic [ref=e86]:
+        - heading "Structured by a real curriculum" [level=3] [ref=e92]
+        - paragraph [ref=e93]: Interview plans are built from the candidate's actual missions, tools, and objectives — not generic canned questions.
+      - generic [ref=e94]:
+        - heading "Adaptive to experience" [level=3] [ref=e98]
+        - paragraph [ref=e99]: "Persona tuning per seniority: encouraging for juniors, system-design depth for seniors, implementation focus for mid-level."
+      - generic [ref=e100]:
+        - heading "Wraps up with real feedback" [level=3] [ref=e105]
+        - paragraph [ref=e106]: Ends with a structured report — summary, strengths, gaps, and next steps — so interviews are useful, not just a log of questions.
+      - generic [ref=e107]:
+        - heading "Paced, not interrogating" [level=3] [ref=e112]
+        - paragraph [ref=e113]: Detects "I don't know" and pivots gracefully instead of hammering the same topic. Momentum matters in hiring.
+      - generic [ref=e114]:
+        - heading "Resilient for live demos" [level=3] [ref=e118]
+        - paragraph [ref=e119]: OpenRouter → local Ollama → offline mock fallback. No crashes if the network or a key fails mid-demo.
+  - generic [ref=e121]:
+    - generic [ref=e122]:
+      - text: Output
+      - heading "An interview that ends with a report — not a dead end" [level=2] [ref=e123]
+      - paragraph [ref=e124]: "When the last question is asked, ProbeIQ assembles a structured assessment: a candid summary, quantified strengths, areas to grow, and concrete next steps."
+      - generic [ref=e125]:
+        - generic [ref=e126]: Summary narrative
+        - generic [ref=e129]: Strengths
+        - generic [ref=e132]: Gaps to address
+        - generic [ref=e135]: Next steps
+    - generic [ref=e138]:
+      - generic [ref=e139]: Candidate · Sarah J.
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - generic [ref=e142]: Strengths
+          - generic [ref=e143]: Clear reasoning on retrieval recall vs precision trade-offs.
+        - generic [ref=e144]:
+          - generic [ref=e145]: Gap
+          - generic [ref=e146]: Production latency — no caching plan discussed for large datasets.
+        - generic [ref=e147]:
+          - generic [ref=e148]: Next
+          - generic [ref=e149]: Prototype vector index with pgvector + monitor recall at p99.
+  - generic [ref=e150]:
+    - generic [ref=e153]:
+      - heading "Try a live interview — on your own candidate data." [level=2] [ref=e154]
+      - paragraph [ref=e155]: Pick a candidate from your backend and watch the interviewer adapt in real time.
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - heading "Select a Candidate" [level=3] [ref=e159]
+        - generic [ref=e160]: Real mission data
+      - generic [ref=e161]: Loading candidates from the live backend…
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - text: Focus
+          - combobox "Focus" [ref=e165]:
+            - option "Candidate project work" [selected]
+            - option "System design"
+            - option "Debugging and delivery"
+        - generic [ref=e166]:
+          - text: Length
+          - combobox "Length" [ref=e167]:
+            - option "Short"
+            - option "Standard" [selected]
+            - option "Deep dive"
+        - generic [ref=e168]:
+          - text: Style
+          - combobox "Style" [ref=e169]:
+            - option "Technical" [selected]
+            - option "Balanced"
+            - option "Supportive"
+      - button "Start the interview" [disabled] [ref=e170]
+      - paragraph [ref=e171]: The interviewer adapts its questions to each candidate's experience.
+  - generic [ref=e173]:
+    - generic [ref=e174]:
+      - generic [ref=e175]: PI
+      - generic [ref=e176]: ProbeIQ
+    - paragraph [ref=e177]: ProbeIQ · Technical interview agent · Built for hiring teams that value depth over dramatics.
+    - generic [ref=e178]:
+      - link "Privacy" [ref=e179] [cursor=pointer]:
+        - /url: /privacy
+      - link "Terms" [ref=e180] [cursor=pointer]:
+        - /url: /terms
