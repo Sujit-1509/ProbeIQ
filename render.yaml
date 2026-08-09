@@ -1,0 +1,22 @@
+# Render Blueprint for ProbeIQ backend (free tier)
+# Import: render.com → New → Blueprint → select repo.
+# Env vars marked sync:false are set manually in the Render dashboard (secrets).
+services:
+  - type: web
+    name: probeiq-api
+    runtime: python
+    plan: free
+    region: oregon
+    branch: fix-heuristics
+    pythonVersion: 3.12.0
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: openai/gpt-4o-mini
+      - key: OLLAMA_BASE_URL
+        value: http://localhost:11434/v1
+      - key: OLLAMA_MODEL
+        value: qwen2.5-coder
