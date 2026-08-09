@@ -6,17 +6,17 @@ import type { Message } from '@/lib/types'
 
 export default function InterviewPage() {
   const router = useRouter()
-  const [messages, setMessages]       = useState<Message[]>([])
-  const [sessionId, setSessionId]     = useState('')
-  const [candidateName, setName]      = useState('')
-  const [candidateRole, setRole]      = useState('')
-  const [input, setInput]             = useState('')
-  const [typing, setTyping]           = useState(false)
-  const [disabled, setDisabled]       = useState(false)
-  const [qCount, setQCount]           = useState(0)
-  const [paused, setPaused]           = useState(false)
-  const bottomRef                     = useRef<HTMLDivElement>(null)
-  const textareaRef                   = useRef<HTMLTextAreaElement>(null)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [sessionId, setSessionId] = useState('')
+  const [candidateName, setName] = useState('')
+  const [candidateRole, setRole] = useState('')
+  const [input, setInput] = useState('')
+  const [typing, setTyping] = useState(false)
+  const [disabled, setDisabled] = useState(false)
+  const [qCount, setQCount] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     const raw = localStorage.getItem('probeiq_session')
@@ -52,9 +52,7 @@ export default function InterviewPage() {
       setTyping(false)
       setMessages(m => {
         const last = m[m.length - 1]
-        return last?.role === 'interviewer' && last.text === data.reply
-          ? m
-          : [...m, { role: 'interviewer', text: data.reply }]
+        return last?.role === 'interviewer' && last.text === data.reply ? m : [...m, { role: 'interviewer', text: data.reply }]
       })
 
       if (data.done) {
@@ -88,49 +86,31 @@ export default function InterviewPage() {
     }
   }
 
-  const initials = candidateName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-
   return (
     <div className="flex flex-col h-dvh max-w-4xl mx-auto bg-[#F0F9FF]">
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[#BAE6FD] bg-white flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2563EB] to-[#1E3A5F]
-            flex items-center justify-center text-white font-bold text-xs select-none shadow-sm">
-            AI
-          </div>
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2563EB] to-[#1E3A5F] flex items-center justify-center text-white font-bold text-xs select-none shadow-sm">AI</div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-semibold text-sm text-[#0F172A]">Alex</span>
-              <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
-                Technical Interviewer
-              </span>
+              <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Technical Interviewer</span>
             </div>
-            <div className="text-xs text-slate-500 mt-0.5">
-              Interviewing {candidateName}
-            </div>
+            <div className="text-xs text-slate-500 mt-0.5">Interviewing {candidateName}</div>
           </div>
         </div>
-        <div className="flex items-center gap-3"><span className="text-xs font-semibold text-slate-500 tabular-nums">Q {qCount} / ~8-12</span><button aria-pressed={paused} onClick={() => setPaused(value => !value)} className="pi-control px-3 text-xs font-semibold text-[#0E7490] bg-cyan-50 hover:bg-cyan-100">{paused ? 'Resume' : 'Pause'}</button></div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold text-slate-500 tabular-nums">Q {qCount} / ~8-12</span>
+          <button aria-pressed={paused} onClick={() => setPaused(value => !value)} className="pi-control px-3 text-xs font-semibold text-[#0E7490] bg-cyan-50 hover:bg-cyan-100">{paused ? 'Resume' : 'Pause'}</button>
+        </div>
       </header>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 flex flex-col gap-3 bg-[#F0F9FF]">
         {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`flex fade-up
-              ${m.role === 'candidate' ? 'justify-end' :
-                m.role === 'system'    ? 'justify-center' : 'justify-start'}`}
-          >
-            <div className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap rounded-xl
-              ${m.role === 'interviewer'
-                ? 'bg-white border border-[#E4E7EB] text-[#0F172A] rounded-bl-sm'
-                : m.role === 'candidate'
-                ? 'bg-[#0E7490] text-white rounded-br-sm'
-                : 'bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg'
-              }`}
-            >
+          <div key={i} className={`flex fade-up ${m.role === 'candidate' ? 'justify-end' : m.role === 'system' ? 'justify-center' : 'justify-start'}`}>
+            <div className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap rounded-xl ${m.role === 'interviewer' ? 'bg-white border border-[#E4E7EB] text-[#0F172A] rounded-bl-xl' : m.role === 'candidate' ? 'bg-[#0E7490] text-white rounded-br-xl' : 'bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl'}`}>
               {m.text}
             </div>
           </div>
@@ -138,7 +118,7 @@ export default function InterviewPage() {
 
         {typing && (
           <div className="flex justify-start fade-up">
-            <div className="bg-white border border-[#E4E7EB] rounded-xl rounded-bl-sm px-4 py-3 flex gap-1.5 items-center">
+            <div className="bg-white border border-[#E4E7EB] rounded-2xl rounded-bl-xl px-4 py-3 flex gap-1.5 items-center">
               <span className="text-xs text-slate-500 mr-1.5">Alex is typing</span>
               <span className="w-2 h-2 rounded-full bg-slate-400 typing-dot" />
               <span className="w-2 h-2 rounded-full bg-slate-400 typing-dot" />
@@ -164,19 +144,11 @@ export default function InterviewPage() {
           }}
           disabled={disabled || paused}
           rows={2}
-          placeholder="Type your answer… (Enter to send, Shift+Enter for newline)"
-          className="flex-1 resize-none rounded-lg border-2 border-[#BAE6FD] px-3 py-2.5 text-sm
-            focus:outline-none focus:border-[#0891B2] transition-colors duration-150
-            disabled:opacity-50 max-h-[120px]"
+          placeholder="Type your answer... (Enter to send, Shift+Enter for newline)"
+          className="flex-1 resize-none rounded-2xl border-2 border-[#BAE6FD] px-4 py-3 text-sm focus:outline-none focus:border-[#0891B2] transition-colors duration-150 disabled:opacity-50 max-h-[120px]"
         />
-        <button onClick={handleSkip} disabled={disabled || paused} className="pi-control px-3 border border-[#94A3B8] text-slate-700 font-semibold text-sm disabled:opacity-40">Skip</button>
-        <button
-          onClick={handleSend}
-          disabled={disabled || paused || !input.trim()}
-          className="pi-control px-5 bg-[#0E7490] text-white font-semibold text-sm
-            cursor-pointer transition-colors duration-150 whitespace-nowrap
-          disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#155E75]"
-        >
+        <button onClick={handleSkip} disabled={disabled || paused} className="pi-control px-4 border border-[#94A3B8] text-slate-700 font-semibold text-sm disabled:opacity-40">Skip</button>
+        <button onClick={handleSend} disabled={disabled || paused || !input.trim()} className="pi-control px-6 bg-[#0E7490] text-white font-semibold text-sm cursor-pointer transition-colors duration-150 whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#155E75]">
           Send
         </button>
       </div>
