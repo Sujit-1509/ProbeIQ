@@ -116,7 +116,7 @@ function CandidatePicker() {
   }
 
   return (
-    <div className="rounded-2xl bg-white border border-[#E4E7EB] shadow-xl shadow-slate-900/5 p-6 sm:p-8 w-full max-w-2xl mx-auto">
+    <div className="pi-surface landing-reveal landing-reveal-4 rounded-xl p-6 sm:p-8 w-full max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-sm font-semibold text-[#1E3A5F] uppercase tracking-widest">
           Select a Candidate
@@ -137,7 +137,7 @@ function CandidatePicker() {
             key={c.member.id}
             onClick={() => setSelectedIdx(i)}
             className={`flex flex-wrap sm:flex-nowrap items-center gap-2 p-4 rounded-xl border-2 text-left cursor-pointer
-              transition-all duration-150
+              transition-all duration-200
               ${selectedIdx === i
                 ? 'border-[#2563EB] bg-blue-50'
                 : 'border-[#E4E7EB] hover:border-[#2563EB] hover:bg-blue-50'}`}
@@ -188,12 +188,9 @@ function CandidatePicker() {
 function HeroMock() {
   return (
     <div className="relative w-full max-w-lg mx-auto">
-      <div className="absolute -inset-4 bg-gradient-to-tr from-[#2563EB]/10 via-transparent to-transparent
-        rounded-full" aria-hidden="true" />
-
-      <div className="relative rounded-2xl bg-white border border-[#E4E7EB] shadow-xl shadow-slate-900/5 overflow-hidden">
+      <div className="relative rounded-2xl bg-white border border-[#BAE6FD] shadow-xl shadow-cyan-950/10 overflow-hidden">
         <div className="flex items-center gap-3 px-5 py-4 border-b border-[#E4E7EB] bg-[#F8FAFC]">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2563EB] to-[#1E3A5F]
+          <div className="w-10 h-10 rounded-full bg-[#0E7490]
             flex items-center justify-center text-white font-bold text-sm shadow-sm">AI</div>
           <div>
             <div className="flex items-center gap-2">
@@ -290,7 +287,7 @@ const STEPS = [
 
 export default function HomePage() {
   return (
-    <main className="min-h-dvh bg-[#F8FAFC] text-[#0F172A] overflow-x-clip">
+    <main className="min-h-dvh text-[#0F172A] overflow-x-clip">
       {/* Nav */}
       <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-xl border-b border-[#E4E7EB]">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -302,53 +299,49 @@ export default function HomePage() {
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
             <a href="#how" className="hover:text-[#2563EB] transition-colors cursor-pointer">How it works</a>
             <a href="#features" className="hover:text-[#2563EB] transition-colors cursor-pointer">Features</a>
-            <a href="#feedback" className="hover:text-[#2563EB] transition-colors cursor-pointer">Feedback</a>
+            <a href="#feedback" className="hover:text-[#0E7490] transition-colors cursor-pointer">Feedback</a>
+            <a href="/dashboard" className="hover:text-[#0E7490] transition-colors cursor-pointer">Recruiter review</a>
           </div>
           <a href="#start"
-            className="px-5 py-2.5 bg-[#1E3A5F] text-white text-sm font-semibold rounded-xl cursor-pointer
-              transition-all duration-150 shadow-sm hover:bg-[#16304f] active:scale-[0.98]">
+            className="pi-control px-5 bg-[#0E7490] text-white text-sm font-semibold rounded-lg cursor-pointer
+              transition-all duration-200 shadow-sm hover:bg-[#155E75] active:scale-[0.98]">
             Start interview</a>
         </nav>
       </header>
 
       {/* Hero */}
-      <section id="top" className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-24 grid lg:grid-cols-2 gap-14 items-center min-h-[calc(100dvh-4rem)]">
+      <section id="top" className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 pb-16 grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100svh-4rem)]">
         <div>
-          <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#2563EB]
-            bg-blue-50 border border-blue-100 rounded-full px-3.5 py-1.5">
-            Technical Interview Agent
+          <span className="landing-reveal inline-flex items-center gap-2 text-xs font-semibold text-[#0E7490]
+            bg-cyan-50 border border-cyan-100 rounded-full px-3.5 py-1.5">
+            Interview intelligence for hiring teams
           </span>
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] text-[#0F172A]">
-            Interviews that feel{' '}
-            <span className="text-[#2563EB]">
-              like a real
-            </span>{' '}
-            conversation.
+          <h1 className="landing-reveal landing-reveal-1 mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[.98] text-[#0F172A]">
+            ProbeIQ
           </h1>
-          <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-xl">
+          <p className="landing-reveal landing-reveal-2 mt-5 text-lg text-slate-600 leading-relaxed max-w-xl">
             ProbeIQ conducts realistic multi-turn technical interviews, grounded in what a
             candidate actually built — then delivers structured, honest feedback your team
             can act on.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="landing-reveal landing-reveal-3 mt-8 flex flex-wrap gap-3">
             <a href="#start"
-               className="px-7 py-3.5 bg-[#1E3A5F] text-white font-semibold rounded-xl cursor-pointer
-                 transition-all duration-150 shadow-lg shadow-slate-900/10
-                 hover:bg-[#16304f] hover:-translate-y-0.5 active:scale-[0.98]">
+               className="pi-control px-7 inline-flex items-center bg-[#0E7490] text-white font-semibold rounded-lg cursor-pointer
+                 transition-all duration-200 shadow-lg shadow-cyan-950/10 hover:bg-[#155E75] hover:-translate-y-0.5 active:scale-[0.98]">
               Start an interview <IconArrow className="inline" /></a>
             <a href="#how"
-              className="px-7 py-3.5 bg-white text-[#0F172A] font-semibold rounded-xl cursor-pointer
-                border border-[#E4E7EB] transition-all duration-150
-                hover:border-[#2563EB] hover:text-[#2563EB] active:scale-[0.98]">
+              className="pi-control px-7 inline-flex items-center bg-white text-[#0F172A] font-semibold rounded-lg cursor-pointer
+                border border-[#BAE6FD] transition-all duration-200
+                hover:border-[#0891B2] hover:text-[#0E7490] active:scale-[0.98]">
               See how it works</a>
           </div>
-          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-slate-500">
+          <div className="landing-reveal landing-reveal-4 mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-slate-500">
             <div><span className="font-bold text-[#0F172A] text-2xl">~8-12</span> questions</div>
             <div><span className="font-bold text-[#0F172A] text-2xl">3×</span> persona depth</div>
             <div><span className="font-bold text-[#0F172A] text-2xl">0</span> demo crashes</div>
           </div>
         </div>
-        <HeroMock />
+        <div className="landing-reveal landing-reveal-2"><HeroMock /></div>
       </section>
 
       {/* How it works */}

@@ -91,9 +91,9 @@ export default function InterviewPage() {
   const initials = candidateName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
   return (
-    <div className="flex flex-col h-dvh max-w-3xl mx-auto">
+    <div className="flex flex-col h-dvh max-w-4xl mx-auto bg-[#F0F9FF]">
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-3 border-b border-[#E4E7EB] bg-white flex-shrink-0">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[#BAE6FD] bg-white flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2563EB] to-[#1E3A5F]
             flex items-center justify-center text-white font-bold text-xs select-none shadow-sm">
@@ -111,11 +111,11 @@ export default function InterviewPage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3"><span className="text-xs text-slate-400 tabular-nums">Q {qCount} / ~8-12</span><button onClick={() => setPaused(value => !value)} className="text-xs font-semibold text-blue-600">{paused ? 'Resume' : 'Pause'}</button></div>
+        <div className="flex items-center gap-3"><span className="text-xs font-semibold text-slate-500 tabular-nums">Q {qCount} / ~8-12</span><button aria-pressed={paused} onClick={() => setPaused(value => !value)} className="pi-control px-3 text-xs font-semibold text-[#0E7490] bg-cyan-50 hover:bg-cyan-100">{paused ? 'Resume' : 'Pause'}</button></div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-3 bg-[#F8FAFC]">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 flex flex-col gap-3 bg-[#F0F9FF]">
         {messages.map((m, i) => (
           <div
             key={i}
@@ -127,7 +127,7 @@ export default function InterviewPage() {
               ${m.role === 'interviewer'
                 ? 'bg-white border border-[#E4E7EB] text-[#0F172A] rounded-bl-sm'
                 : m.role === 'candidate'
-                ? 'bg-[#1E3A5F] text-white rounded-br-sm'
+                ? 'bg-[#0E7490] text-white rounded-br-sm'
                 : 'bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg'
               }`}
             >
@@ -150,7 +150,7 @@ export default function InterviewPage() {
       </div>
 
       {/* Input */}
-      <div className="flex gap-3 items-end px-5 py-4 border-t border-[#E4E7EB] bg-white flex-shrink-0">
+      <div className="flex gap-3 items-end px-4 sm:px-6 py-4 border-t border-[#BAE6FD] bg-white flex-shrink-0">
         <textarea
           ref={textareaRef}
           value={input}
@@ -165,17 +165,17 @@ export default function InterviewPage() {
           disabled={disabled || paused}
           rows={2}
           placeholder="Type your answer… (Enter to send, Shift+Enter for newline)"
-          className="flex-1 resize-none rounded-lg border-2 border-[#E4E7EB] px-3 py-2.5 text-sm
-            focus:outline-none focus:border-[#2563EB] transition-colors duration-150
+          className="flex-1 resize-none rounded-lg border-2 border-[#BAE6FD] px-3 py-2.5 text-sm
+            focus:outline-none focus:border-[#0891B2] transition-colors duration-150
             disabled:opacity-50 max-h-[120px]"
         />
-        <button onClick={handleSkip} disabled={disabled || paused} className="px-3 py-2.5 border border-[#CBD5E1] text-slate-600 font-semibold text-sm rounded-lg disabled:opacity-40">Skip</button>
+        <button onClick={handleSkip} disabled={disabled || paused} className="pi-control px-3 border border-[#94A3B8] text-slate-700 font-semibold text-sm disabled:opacity-40">Skip</button>
         <button
           onClick={handleSend}
           disabled={disabled || paused || !input.trim()}
-          className="px-5 py-2.5 bg-[#2563EB] text-white font-semibold text-sm rounded-lg
+          className="pi-control px-5 bg-[#0E7490] text-white font-semibold text-sm
             cursor-pointer transition-colors duration-150 whitespace-nowrap
-            disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-700"
+          disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#155E75]"
         >
           Send
         </button>

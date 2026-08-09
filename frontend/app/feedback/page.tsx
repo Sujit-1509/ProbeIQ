@@ -67,7 +67,7 @@ export default function FeedbackPage() {
   ]
 
   return (
-    <main className="min-h-dvh bg-[#F8FAFC] flex flex-col items-center px-4 py-10">
+    <main className="min-h-dvh flex flex-col items-center px-4 py-8 sm:py-10">
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-[#1E3A5F]">Interview Complete</h1>
         <p className="text-slate-500 text-sm mt-1">Feedback for {name}</p>
@@ -78,7 +78,7 @@ export default function FeedbackPage() {
         {cards.map(c => (
           <div
             key={c.label}
-            className={`bg-white rounded-xl border border-[#E4E7EB] border-t-4 ${c.border} p-5 shadow-sm`}
+          className={`pi-surface rounded-xl border-t-4 ${c.border} p-5`}
           >
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
               {c.label}
@@ -88,7 +88,7 @@ export default function FeedbackPage() {
         ))}
       </div>
 
-      {feedback.overall_score && <div className="w-full max-w-3xl bg-white border border-[#E4E7EB] rounded-xl p-5 mb-8"><div className="flex items-center justify-between mb-4"><h2 className="font-semibold text-[#0F172A]">Technical depth by topic</h2><span className="text-2xl font-bold text-[#1E3A5F]">{feedback.overall_score}/5</span></div><div className="grid sm:grid-cols-2 gap-3">{feedback.topic_scores?.map(score => <div key={`${score.day}-${score.title}`} className="border border-slate-200 rounded-lg p-3"><div className="flex justify-between text-sm"><span className="font-medium text-[#0F172A]">Day {score.day}: {score.title}</span><span className="font-semibold text-blue-600">{score.score}/5</span></div><div className="h-2 bg-slate-100 rounded-full mt-2"><div className="h-2 bg-blue-600 rounded-full" style={{ width: `${score.score * 20}%` }} /></div></div>)}</div></div>}
+      {feedback.overall_score && <div className="pi-surface w-full max-w-3xl rounded-xl p-5 mb-8"><div className="flex items-center justify-between mb-4"><h2 className="font-semibold text-[#0F172A]">Technical depth by topic</h2><span className="text-2xl font-bold text-[#0E7490]">{feedback.overall_score}/5</span></div><div className="grid sm:grid-cols-2 gap-3">{feedback.topic_scores?.map(score => <div key={`${score.day}-${score.title}`} className="border border-cyan-100 rounded-lg p-3"><div className="flex justify-between text-sm"><span className="font-medium text-[#0F172A]">Day {score.day}: {score.title}</span><span className="font-semibold text-[#0E7490]">{score.score}/5</span></div><div className="h-2 bg-cyan-50 rounded-full mt-2"><div className="h-2 bg-[#0E7490] rounded-full" style={{ width: `${score.score * 20}%` }} /></div></div>)}</div></div>}
 
       {transcript.length > 0 && <details className="w-full max-w-3xl bg-white border border-[#E4E7EB] rounded-xl p-5 mb-8"><summary className="font-semibold text-[#0F172A] cursor-pointer">Interview transcript</summary><div className="mt-4 flex flex-col gap-3">{transcript.filter(message => message.role !== 'system').map((message, index) => <div key={index} className="text-sm"><span className="font-semibold text-slate-500">{message.role === 'interviewer' ? 'Interviewer' : name}:</span> <span className="text-[#0F172A]">{message.text}</span></div>)}</div></details>}
 
