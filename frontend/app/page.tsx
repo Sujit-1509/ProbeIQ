@@ -89,10 +89,15 @@ function CandidatePicker() {
   const [error, setError] = useState<string | null>(null)
   const [settings, setSettings] = useState<InterviewSettings>({ focus: 'Candidate project work', duration: 'standard', style: 'technical' })
 
-  useEffect(() => {
+  function loadCandidates() {
+    setError(null)
     getCandidates()
       .then(setCandidates)
-      .catch(() => setError('Cannot reach backend (port 8000). Candidates unavailable.'))
+      .catch(() => setError('The candidate service did not respond. Check that the backend is running, then retry.'))
+  }
+
+  useEffect(() => {
+    loadCandidates()
   }, [])
 
   async function handleStart() {
@@ -162,9 +167,9 @@ function CandidatePicker() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
-          {error}
-        </p>
+        <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3 mb-4 flex items-center justify-between gap-3">
+          <span>{error}</span><button type="button" onClick={loadCandidates} className="pi-control shrink-0 px-3 text-xs font-semibold border border-red-200 bg-white">Retry</button>
+        </div>
       )}
 
       <button

@@ -1,6 +1,6 @@
 import type { Candidate, InterviewResponse, InterviewHistory, InterviewSettings } from './types'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/backend'
 const API = `${API_BASE}/api/interview`
 
 export async function startInterview(

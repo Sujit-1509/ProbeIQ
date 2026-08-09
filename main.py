@@ -8,6 +8,7 @@ Final:   POST { sessionId, message }    → { reply, done: true, feedback: {...}
 """
 from __future__ import annotations
 import json
+from functools import lru_cache
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -169,6 +170,11 @@ def interview(req: InterviewRequest):
 @app.get("/api/candidates")
 def get_candidates():
     """Return all candidates from candidates.json for frontend picker."""
+    return _load_candidates()
+
+
+@lru_cache(maxsize=1)
+def _load_candidates() -> list[dict]:
     candidates_path = Path("candidates.json")
     if not candidates_path.exists():
         raise HTTPException(status_code=500, detail="candidates.json not found")
