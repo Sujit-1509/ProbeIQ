@@ -8,3 +8,5 @@ node_modules/
 # Build artifacts
 *.tsbuildinfo
 next-env.d.ts
+.vercel
+.env*
